@@ -21,3 +21,7 @@
     Item Invoice: <%=link_to invoice_id, "/merchants/#{@merchant.id}/invoices/#{invoice_id}" %></h5></li>
   </div>
 <% end %>
+
+<div id="bulk_discount">
+  <%= link_to "#{@merchant.name}'s Bulk Discounts", merchant_bulk_discounts_path(@merchant.id) %>
+</div>
