@@ -269,6 +269,16 @@ RSpec.describe 'Merchant Dashboard' do
 
         end
       end
+
+      describe 'bulk discounts extension' do
+        it 'has a link to to the bulk discounts index page for that merchant' do
+          visit merchants_merchantid_dashboard_path(@merchant_1)
+
+          within "#bulk_discount" do
+            expect(page).to have_link "#{@merchant_1.name}'s Bulk Discounts", href: merchant_bulk_discounts_path(@merchant_1.id)
+          end
+        end
+      end
     end
   end
 end
