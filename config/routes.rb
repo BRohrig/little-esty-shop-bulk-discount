@@ -9,9 +9,10 @@ Rails.application.routes.draw do
   resources :merchants, only: [:index, :show] do
     resources :items, :controller => :merchants_items, except: [:destroy]
     resources :invoices, only: [:index, :show]
-    resources :bulk_discounts, :controller => :merchant_discounts, only: [:index, :show]
+    resources :bulk_discounts, :controller => :merchant_discounts, only: [:index, :show, :new, :create]
   end
-
+  
+  resources :bulk_discounts, only: :create
   resources :invoices, only: [:index]
   
   namespace :admin do
