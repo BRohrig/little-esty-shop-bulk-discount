@@ -43,7 +43,7 @@ RSpec.describe "bulk discounts index page" do
     end
   end
 
-  describe "User Story 2" do
+  describe "User Story 2" do #continues in new_spec
     it 'has a link on the index page that takes me to the new page to create a new bulk_discount' do
       visit merchant_bulk_discounts_path(@merchant1.id)
 
@@ -51,8 +51,36 @@ RSpec.describe "bulk discounts index page" do
       click_link "Create New Discount"
       expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant1.id))
     end
+  end
 
+  describe "User Story 3" do
+    it 'has a button next to each discount to delete that discount' do
+      visit merchant_bulk_discounts_path(@merchant1.id)
 
+      within "#discounts-#{@discount1.id}" do
+        expect(page).to have_button("Delete Discount")
+      end
+
+      within "#discounts-#{@discount2.id}" do
+        expect(page).to have_button("Delete Discount")
+      end
+    end
+
+    it 'deletes the discount and redirects back to index page where discount no longer appears' do
+      visit merchant_bulk_discounts_path(@merchant1.id)
+
+      within "#discounts-#{@discount1.id}" do
+        click_button("Delete Discount")
+      end
+
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
+
+      expect(page).to_not have_css("#discounts-#{@discount1.id}")
+      expect(page).to_not have_content("This Discount Gives #{@discount1.percent_off}% off if the customer buys #{@discount1.threshold} items")
+      expect(page).to have_css("#discounts-#{@discount2.id}")
+      expect(page).to have_css("#discounts-#{@discount3.id}")
+      expect(page).to have_css("#discounts-#{@discount4.id}")
+    end
 
 
   end

@@ -6,6 +6,7 @@
     <h3>
     <%= "This Discount Gives #{discount.percent_off}% off if the customer buys #{discount.threshold} items" %>
     <%= link_to "Details", merchant_bulk_discount_path(@merchant.id, discount.id) %>
+    <%= button_to "Delete Discount", merchant_bulk_discount_path(@merchant.id, discount.id), method: :delete, params: {id: discount.id} %>
     </h3>
     </div>
     <br>
