@@ -20,6 +20,21 @@ RSpec.describe "bulk discount edit page" do
       expect(page).to have_field :threshold, with: @discount2.threshold
     end
 
+    it 'modifies the appropriate discount when submitted and redirects to the discount show page' do
+      visit edit_merchant_bulk_discount_path(@merchant1.id, @discount4.id)
+
+      fill_in :percent_off, with: 4
+      fill_in :threshold, with: 90
+
+      click_button "Submit"
+      
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1.id, @discount4.id))
+      expect(page).to have_content("Discount Percentage: 4")
+      expect(page).to have_content("Item Quantity to Receive Discount: 90")
+      expect(page).to_not have_content("Discount Percentage: #{@discount4.percent_off}")
+      expect(page).to_not have_content("Item Quantity to Receive Discount: #{@discount4.threshold}")
+    end
+
 
 
   end
