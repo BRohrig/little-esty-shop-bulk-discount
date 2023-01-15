@@ -1,39 +1,40 @@
 require 'rails_helper'
 
 RSpec.describe 'merchant invoice show' do
-  before(:each) do
-    @merchant_1 = create(:merchant)
-    @merchant_2 = create(:merchant)
-    @merchant_3 = create(:merchant)
-
-    @item_1 = create(:item, merchant: @merchant_1)
-    @item_2 = create(:item, merchant: @merchant_2)
-    @item_3 = create(:item, merchant: @merchant_2)
-    @item_4 = create(:item, merchant: @merchant_2)
-    @item_5 = create(:item, merchant: @merchant_2)
-    @item_6 = create(:item, merchant: @merchant_2)
-    @item_7 = create(:item, merchant: @merchant_3)
-    @item_8 = create(:item, merchant: @merchant_3)
-    @item_9 = create(:item, merchant: @merchant_3)
-    @item_10 = create(:item, merchant: @merchant_3)
-
-    @customer_1 = create(:customer)
-    @customer_2 = create(:customer)
-
-    @invoice_1 = create(:invoice, customer: @customer_1)
-    @invoice_2 = create(:invoice, customer: @customer_1)
-    @invoice_3 = create(:invoice, customer: @customer_1)
-    @invoice_4 = create(:invoice, customer: @customer_2)
-
-    @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1)
-    @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2)
-    @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, status: 0)
-    @invoice_item_4 = create(:invoice_item, item: @item_4, invoice: @invoice_3, status: 1) 
-    @invoice_item_5 = create(:invoice_item, item: @item_5, invoice: @invoice_4)
-    @invoice_item_6 = create(:invoice_item, item: @item_7, invoice: @invoice_4)
-  end
-
+  
   describe '/merchants/merchant_id/invoices/invoice_id' do
+    before(:each) do
+      @merchant_1 = create(:merchant)
+      @merchant_2 = create(:merchant)
+      @merchant_3 = create(:merchant)
+
+      @item_1 = create(:item, merchant: @merchant_1)
+      @item_2 = create(:item, merchant: @merchant_2)
+      @item_3 = create(:item, merchant: @merchant_2)
+      @item_4 = create(:item, merchant: @merchant_2)
+      @item_5 = create(:item, merchant: @merchant_2)
+      @item_6 = create(:item, merchant: @merchant_2)
+      @item_7 = create(:item, merchant: @merchant_3)
+      @item_8 = create(:item, merchant: @merchant_3)
+      @item_9 = create(:item, merchant: @merchant_3)
+      @item_10 = create(:item, merchant: @merchant_3)
+
+      @customer_1 = create(:customer)
+      @customer_2 = create(:customer)
+
+      @invoice_1 = create(:invoice, customer: @customer_1)
+      @invoice_2 = create(:invoice, customer: @customer_1)
+      @invoice_3 = create(:invoice, customer: @customer_1)
+      @invoice_4 = create(:invoice, customer: @customer_2)
+
+      @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1)
+      @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2)
+      @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, status: 0)
+      @invoice_item_4 = create(:invoice_item, item: @item_4, invoice: @invoice_3, status: 1) 
+      @invoice_item_5 = create(:invoice_item, item: @item_5, invoice: @invoice_4)
+      @invoice_item_6 = create(:invoice_item, item: @item_7, invoice: @invoice_4)
+    end
+
     it 'shows all information related to that invoice including invoice id, invoice status, invoice creation date, customer name' do
       visit merchant_invoice_path(@merchant_2, @invoice_2)
 
@@ -67,8 +68,8 @@ RSpec.describe 'merchant invoice show' do
     end
 
     it 'shows each invoice items status is a select field and item current status is selected' do
- 
       visit merchant_invoice_path(@merchant_2, @invoice_3)
+
       within "#item-#{@item_3.id}" do
         expect(page).to have_select("status", selected: "packaged")
         expect(page).to_not have_select("status", selected: "pending")
@@ -80,5 +81,39 @@ RSpec.describe 'merchant invoice show' do
       expect(current_path).to eq("/merchants/#{@merchant_2.id}/invoices/#{@invoice_3.id}")
       expect(page).to have_select("status", selected: "shipped")
     end
+  end
+
+  describe "solo user story 6" do
+    before(:all) do
+      InvoiceItem.delete_all
+      BulkDiscount.delete_all
+      Item.delete_all
+      Invoice.delete_all
+      Customer.delete_all
+      Merchant.delete_all
+      @merchant = create(:merchant)
+      @item1 = create(:item, merchant: @merchant)
+      @item2 = create(:item, merchant: @merchant)
+      @item3 = create(:item, merchant: @merchant)
+      @customer = create(:customer)
+      @invoice = create(:invoice, customer: @customer)
+      @invoice_item1 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 5, unit_price: 50)
+      @invoice_item2 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 10, unit_price: 25)
+      @invoice_item3 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 5, unit_price: 50)
+      @invoice_item4 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 15, unit_price: 100)
+      @invoice_item5 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 20, unit_price: 60)
+      @invoice_item6 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 25, unit_price: 150)
+      @bulk_discount1 = create(:bulk_discount, merchant: @merchant, percent_off: 10, threshold: 8)
+      @bulk_discount2 = create(:bulk_discount, merchant: @merchant, percent_off: 20, threshold: 30)
+      @bulk_discount3 = create(:bulk_discount, merchant: @merchant, percent_off: 30, threshold: 75)
+      @bulk_discount4 = create(:bulk_discount, merchant: @merchant, percent_off: 15, threshold: 100)
+
+    end
+    it 'displays the discounted revenue next to the raw revenue' do
+      visit merchant_invoice_path(@merchant, @invoice)
+      binding.pry
+
+    end
+
   end
 end
