@@ -13,4 +13,11 @@ class InvoiceItem < ApplicationRecord
   def self.revenue
     self.sum("(quantity * unit_price) / 100.00")
   end
+
+  def find_discount
+    self.bulk_discounts
+    .where("bulk_discounts.threshold <= ?", self.quantity)
+    .order(percent_off: :desc)
+    .first
+  end
 end
