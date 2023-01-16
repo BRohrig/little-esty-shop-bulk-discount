@@ -70,7 +70,7 @@ RSpec.describe 'merchant invoice show' do
     it 'shows each invoice items status is a select field and item current status is selected' do
       visit merchant_invoice_path(@merchant_2, @invoice_3)
 
-      within "#item-#{@item_3.id}" do
+      within "#item-#{@invoice_item_3.id}" do
         expect(page).to have_select("status", selected: "packaged")
         expect(page).to_not have_select("status", selected: "pending")
         
@@ -84,7 +84,7 @@ RSpec.describe 'merchant invoice show' do
   end
 
   describe "solo user story 6" do
-    before(:all) do
+    before(:each) do
       InvoiceItem.delete_all
       BulkDiscount.delete_all
       Transaction.delete_all
@@ -113,6 +113,22 @@ RSpec.describe 'merchant invoice show' do
     it 'displays the discounted revenue next to the raw revenue' do
       visit merchant_invoice_path(@merchant, @invoice)
       expect(page).to have_content("Invoice Total After Discounts: $7360.0")
+    end
+
+    it 'has a link to the applied discount next to each item' do
+      visit merchant_invoice_path(@merchant, @invoice)
+
+      within "#item-#{@invoice_item1.id}" do
+        expect(page).to_not have_link("Discount Applied")
+      end
+
+      within "#item-#{@invoice_item2.id}" do
+        expect(page).to have_link("Discount Applied", href: merchant_bulk_discount_path(@merchant.id, @bulk_discount1.id))
+      end
+
+      within "#item-#{@invoice_item6.id}" do
+        expect(page).to have_link("Discount Applied", href: merchant_bulk_discount_path(@merchant.id, @bulk_discount3.id))
+      end
     end
 
   end
