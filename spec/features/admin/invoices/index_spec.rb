@@ -1,7 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'the admin invoices index' do
-  before(:each) do
+  before(:all) do
+    BulkDiscount.delete_all
+    InvoiceItem.delete_all
+    Transaction.delete_all
+    Invoice.delete_all
+    Item.delete_all
+    Customer.delete_all
+    Merchant.delete_all
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
     @customer_3 = create(:customer)
