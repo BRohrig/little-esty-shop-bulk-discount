@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'the admin merchants index' do
   before(:each) do
+    BulkDiscount.delete_all
     Transaction.delete_all
     InvoiceItem.delete_all
     Invoice.delete_all
@@ -49,7 +50,7 @@ RSpec.describe 'the admin merchants index' do
     @invoice_item_1 = create(:invoice_item, unit_price: 800, quantity: 1, item: @item_1, invoice: @invoice_1)
     @invoice_item_2 = create(:invoice_item, unit_price: 1000, quantity: 1, item: @item_2, invoice: @invoice_2)
     @invoice_item_3 = create(:invoice_item, unit_price: 900, quantity: 1, item: @item_3, invoice: @invoice_3)
-    @invoice_item_4 = create(:invoice_item, unit_price: 600, quantity: 1, item: @item_4, invoice: @invoice_4)
+    @invoice_item_4 = create(:invoice_item, unit_price: 650, quantity: 1, item: @item_4, invoice: @invoice_4)
     @invoice_item_5 = create(:invoice_item, unit_price: 500, quantity: 1, item: @item_5, invoice: @invoice_5)
     @invoice_item_6 = create(:invoice_item, unit_price: 700, quantity: 1, item: @item_6, invoice: @invoice_6)
     @invoice_item_7 = create(:invoice_item, unit_price: 600, quantity: 1, item: @item_7, invoice: @invoice_7)

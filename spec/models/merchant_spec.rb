@@ -16,6 +16,13 @@ RSpec.describe Merchant, type: :model do
   end
 
   before(:each) do
+    InvoiceItem.delete_all
+    BulkDiscount.delete_all
+    Transaction.delete_all
+    Item.delete_all
+    Invoice.delete_all
+    Customer.delete_all
+    Merchant.delete_all
     @merchant_1 = create(:merchant, name: "merchant 1", status: "enabled")
     @merchant_2 = create(:merchant, name: "merchant 2")
     @merchant_3 = create(:merchant, name: "merchant 3")
@@ -254,6 +261,7 @@ RSpec.describe Merchant, type: :model do
 
   describe '#top_five Merchants' do
     it 'returns the top five merchants based on total revenue' do
+      BulkDiscount.delete_all
       Transaction.delete_all
       InvoiceItem.delete_all
       Invoice.delete_all
@@ -289,6 +297,7 @@ RSpec.describe Merchant, type: :model do
 
   describe 'US 4-Items Ready to Ship & US 5-Invoices sorted oldest to newest' do
     before(:each) do
+      BulkDiscount.delete_all
       Transaction.delete_all
       InvoiceItem.delete_all
       Invoice.delete_all
@@ -353,6 +362,7 @@ RSpec.describe Merchant, type: :model do
 
     describe '#best_day' do
       it 'returns the highest total revenue day for a merchant' do
+        BulkDiscount.dele
         Transaction.delete_all
         InvoiceItem.delete_all
         Invoice.delete_all
