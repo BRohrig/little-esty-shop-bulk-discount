@@ -1,7 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'the admin show page' do
-  before(:each) do
+  before(:all) do
+    BulkDiscount.delete_all
+    InvoiceItem.delete_all
+    Transaction.delete_all
+    Invoice.delete_all
+    Item.delete_all
+    Customer.delete_all
+    Merchant.delete_all
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
     @customer_3 = create(:customer)
@@ -24,12 +31,15 @@ RSpec.describe 'the admin show page' do
     @item_3 = create(:item, merchant: @merchant_1)
     @item_4 = create(:item, merchant: @merchant_1)
 
-    @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1)
-    @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_1)
-    @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_1)
-    @invoice_item_4 = create(:invoice_item, item: @item_4, invoice: @invoice_1)
+    @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 7, unit_price: 12000)
+    @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_1, quantity: 18, unit_price: 42000)
+    @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_1, quantity: 22, unit_price: 31000)
+    @invoice_item_4 = create(:invoice_item, item: @item_4, invoice: @invoice_1, quantity: 32, unit_price: 19000)
     @invoice_item_5 = create(:invoice_item, item: @item_2, invoice: @invoice_2)
     @invoice_item_6 = create(:invoice_item, item: @item_3, invoice: @invoice_2)
+    @bulk_discount1 = create(:bulk_discount, merchant: @merchant_1, percent_off: 10, threshold: 8)
+      @bulk_discount2 = create(:bulk_discount, merchant: @merchant_1, percent_off: 20, threshold: 20)
+      @bulk_discount3 = create(:bulk_discount, merchant: @merchant_1, percent_off: 30, threshold: 30)
   end
 
   describe 'As an admin, When I visit an admin invoice show page' do
@@ -74,5 +84,16 @@ RSpec.describe 'the admin show page' do
       expect(current_path).to eq("/admin/invoices/#{@invoice_4.id}")
       expect(page).to have_select("status", selected: "completed")
     end
+  end
+
+  describe "total revenue and discounted revenue display" do
+    it "displays the raw revenue and the discounted revenue for the invoice" do
+      visit admin_invoice_path(@invoice_1)
+
+      expect(page).to have_content("Total Revenue: $21300.0")
+      expect(page).to have_content("Total Revenue After Discounts: $17356.0")
+    end
+
+
   end
 end
