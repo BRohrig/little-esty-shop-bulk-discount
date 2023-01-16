@@ -14,17 +14,73 @@ RSpec.describe Customer, type: :model do
     it {should validate_presence_of(:last_name)}
   end
 
-  it 'has a method to find the top 5 customers by successful invoices' do
-    result = [Customer.third, Customer.fifth, Customer.second, Customer.fourth, Customer.last]
-    expect(Customer.top_5_transactions).to eq(result)
-  end
+  describe 'successful transactions and invoices' do
+    before(:each) do
+      BulkDiscount.delete_all
+      Transaction.delete_all
+      InvoiceItem.delete_all
+      Invoice.delete_all
+      Item.delete_all
+      Customer.delete_all
+      Merchant.delete_all
 
-  it 'has a method to find the number of successful transactions for a customer' do
-    expect(Customer.third.successful_transactions_count).to eq(5)
+      @merchant_1 = create(:merchant, name: "testing 1")
+      @merchant_2 = create(:merchant, name: "test 2")
+
+      @item1 = create(:item, merchant: @merchant_1)
+      @item2 = create(:item, merchant: @merchant_1)
+      @item3 = create(:item, merchant: @merchant_1)
+      @item4 = create(:item, merchant: @merchant_1)
+      @item5 = create(:item, merchant: @merchant_1)
+      @item6 = create(:item, merchant: @merchant_1)
+
+      @customer1 = create(:customer)
+      @customer2 = create(:customer)
+      @customer3 = create(:customer)
+      @customer4 = create(:customer)
+      @customer5 = create(:customer)
+      @customer6 = create(:customer)
+
+      @invoice1 = create(:invoice, customer: @customer5, status: "completed")
+      @invoice2 = create(:invoice, customer: @customer4, status: "completed")
+      @invoice3 = create(:invoice, customer: @customer2, status: "completed")
+      @invoice4 = create(:invoice, customer: @customer3, status: "cancelled")
+      @invoice5 = create(:invoice, customer: @customer1, status: "completed")
+      @invoice6 = create(:invoice, customer: @customer5, status: "completed")
+      @invoice7 = create(:invoice, customer: @customer3, status: "completed")
+      
+      @transaction_1 = create(:transaction, invoice: @invoice1, result: "success")
+      @transaction_2 = create(:transaction, invoice: @invoice1, result: "success")
+      @transaction_3 = create(:transaction, invoice: @invoice1, result: "success")
+      @transaction_4 = create(:transaction, invoice: @invoice1, result: "success")
+      @transaction_5 = create(:transaction, invoice: @invoice2, result: "failed")
+      @transaction_6 = create(:transaction, invoice: @invoice1, result: "success")
+      @transaction_7 = create(:transaction, invoice: @invoice2, result: "success")
+      @transaction_8 = create(:transaction, invoice: @invoice2, result: "success")
+      @transaction_10 = create(:transaction, invoice: @invoice2, result: "success")
+      @transaction_11 = create(:transaction, invoice: @invoice2, result: "success")
+      @transaction_12 = create(:transaction, invoice: @invoice3, result: "success")
+      @transaction_13 = create(:transaction, invoice: @invoice3, result: "success")
+      @transaction_14 = create(:transaction, invoice: @invoice3, result: "success")
+      @transaction_15 = create(:transaction, invoice: @invoice4, result: "success")
+      @transaction_16 = create(:transaction, invoice: @invoice4, result: "success")
+      @transaction_17 = create(:transaction, invoice: @invoice5, result: "success")
+      @transaction_18 = create(:transaction, invoice: @invoice6, result: "failed")
+    end
+    it 'has a method to find the top 5 customers by successful transactions' do
+      
+      result = [@customer5, @customer4, @customer2, @customer3, @customer1]
+      expect(Customer.top_5_transactions).to eq(result)
+    end
+
+    it 'has a method to find the number of successful transactions for a customer' do
+      expect(Customer.third.successful_transactions_count).to eq(2)
+    end
   end
 
   describe "merchant's top 5 customers by transactions"do
     before(:each) do
+      BulkDiscount.delete_all
       Transaction.delete_all
       InvoiceItem.delete_all
       Invoice.delete_all

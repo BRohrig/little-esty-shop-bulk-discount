@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe "bulk discount edit page" do
   before(:all) do
     BulkDiscount.delete_all
+    InvoiceItem.delete_all
+    Transaction.delete_all
+    Invoice.delete_all
+    Item.delete_all
+    Customer.delete_all
     Merchant.delete_all
     @merchant1 = create(:merchant, name: "Ye Olde Test Shoppe", status: "enabled")
     @discount1 = create(:bulk_discount, percent_off: 10, threshold: 5, merchant_id: @merchant1.id)

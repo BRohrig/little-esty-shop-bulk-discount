@@ -14,6 +14,7 @@ RSpec.describe Invoice, type: :model do
   end
 
   before(:all) do
+    BulkDiscount.delete_all
     Transaction.delete_all
     InvoiceItem.delete_all
     Invoice.delete_all

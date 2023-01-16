@@ -87,6 +87,7 @@ RSpec.describe 'merchant invoice show' do
     before(:all) do
       InvoiceItem.delete_all
       BulkDiscount.delete_all
+      Transaction.delete_all
       Item.delete_all
       Invoice.delete_all
       Customer.delete_all
@@ -97,22 +98,22 @@ RSpec.describe 'merchant invoice show' do
       @item3 = create(:item, merchant: @merchant)
       @customer = create(:customer)
       @invoice = create(:invoice, customer: @customer)
-      @invoice_item1 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 5, unit_price: 50)
-      @invoice_item2 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 10, unit_price: 25)
-      @invoice_item3 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 5, unit_price: 50)
-      @invoice_item4 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 15, unit_price: 100)
-      @invoice_item5 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 20, unit_price: 60)
-      @invoice_item6 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 25, unit_price: 150)
+      @invoice_item1 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 5, unit_price: 5000)
+      @invoice_item2 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 10, unit_price: 2500)
+      @invoice_item3 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 5, unit_price: 5000)
+      @invoice_item4 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 25, unit_price: 10000)
+      @invoice_item5 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 20, unit_price: 6000)
+      @invoice_item6 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 35, unit_price: 15000)
       @bulk_discount1 = create(:bulk_discount, merchant: @merchant, percent_off: 10, threshold: 8)
-      @bulk_discount2 = create(:bulk_discount, merchant: @merchant, percent_off: 20, threshold: 30)
-      @bulk_discount3 = create(:bulk_discount, merchant: @merchant, percent_off: 30, threshold: 75)
-      @bulk_discount4 = create(:bulk_discount, merchant: @merchant, percent_off: 15, threshold: 100)
+      @bulk_discount2 = create(:bulk_discount, merchant: @merchant, percent_off: 20, threshold: 20)
+      @bulk_discount3 = create(:bulk_discount, merchant: @merchant, percent_off: 30, threshold: 30)
+      @bulk_discount4 = create(:bulk_discount, merchant: @merchant, percent_off: 15, threshold: 25)
 
     end
+
     it 'displays the discounted revenue next to the raw revenue' do
       visit merchant_invoice_path(@merchant, @invoice)
-      binding.pry
-
+      expect(page).to have_content("Invoice Total After Discounts: $7360.0")
     end
 
   end

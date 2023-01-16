@@ -167,6 +167,7 @@ RSpec.describe Merchant, type: :model do
 
   describe '#top_five merchants based on total revenue' do
     it 'returns the top five merchants based on total revenue' do
+      BulkDiscount.delete_all
       Transaction.delete_all
       InvoiceItem.delete_all
       Invoice.delete_all
