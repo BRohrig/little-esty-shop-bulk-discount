@@ -362,7 +362,7 @@ RSpec.describe Merchant, type: :model do
 
     describe '#best_day' do
       it 'returns the highest total revenue day for a merchant' do
-        BulkDiscount.dele
+        BulkDiscount.delete_all
         Transaction.delete_all
         InvoiceItem.delete_all
         Invoice.delete_all
