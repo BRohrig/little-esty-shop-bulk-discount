@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'new merchant_item page' do
   before(:all) do
+    BulkDiscount.delete_all
     Transaction.delete_all
     InvoiceItem.delete_all
     Invoice.delete_all

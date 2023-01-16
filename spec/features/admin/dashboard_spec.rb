@@ -3,6 +3,7 @@ require 'csv'
 
 RSpec.describe 'admin dashboard' do
   before(:all) do
+    BulkDiscount.delete_all
     Transaction.delete_all
     InvoiceItem.delete_all
     Invoice.delete_all

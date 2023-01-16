@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe 'Merchant Dashboard' do
   before(:each) do
-    Transaction.delete_all
+    BulkDiscount.delete_all
     InvoiceItem.delete_all
+    Transaction.delete_all
     Invoice.delete_all
     Item.delete_all
     Customer.delete_all

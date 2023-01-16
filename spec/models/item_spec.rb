@@ -38,6 +38,7 @@ RSpec.describe Item, type: :model do
 
   describe "13. Merchant Items Index: Top Item's Best Day" do
     before(:each) do
+      BulkDiscount.delete_all
       Transaction.delete_all
       InvoiceItem.delete_all
       Invoice.delete_all
