@@ -112,7 +112,7 @@ RSpec.describe 'merchant invoice show' do
 
     it 'displays the discounted revenue next to the raw revenue' do
       visit merchant_invoice_path(@merchant, @invoice)
-      expect(page).to have_content("Invoice Total After Discounts: $7360.0")
+      expect(page).to have_content("Total Revenue After Discounts: $7360.0")
     end
 
     it 'has a link to the applied discount next to each item' do
