@@ -108,7 +108,6 @@ RSpec.describe 'merchant invoice show' do
       @bulk_discount2 = create(:bulk_discount, merchant: @merchant, percent_off: 20, threshold: 20)
       @bulk_discount3 = create(:bulk_discount, merchant: @merchant, percent_off: 30, threshold: 30)
       @bulk_discount4 = create(:bulk_discount, merchant: @merchant, percent_off: 15, threshold: 25)
-
     end
 
     it 'displays the discounted revenue next to the raw revenue' do
