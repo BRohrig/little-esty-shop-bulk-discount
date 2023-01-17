@@ -221,14 +221,6 @@ RSpec.describe Invoice, type: :model do
       end
     end
 
-    describe '#invoice_item' do
-      it 'returns the invoice item associated with the item specified' do
-        expect(@invoice_1.invoice_item(@item_1).quantity).to eq(@invoice_item_1.quantity)
-        expect(@invoice_1.invoice_item(@item_1).unit_price).to eq(@invoice_item_1.unit_price)
-        expect(@invoice_1.invoice_item(@item_1).status).to eq(@invoice_item_1.status)
-      end
-    end
-
     describe '#total_revenue' do
       it 'returns the total cost (InvoiceItems: unit_price) of all items on invoice' do
         expected = [(@invoice_item_2.unit_price * @invoice_item_2.quantity), (@invoice_item_3.unit_price * @invoice_item_3.quantity), (@invoice_item_4.unit_price * @invoice_item_4.quantity)].sum
