@@ -19,6 +19,7 @@ RSpec.describe "bulk discounts index page" do
   describe "user story 1" do
     it 'displays all my bulk discounts including their % off and quantity thresholds' do
       visit merchant_bulk_discounts_path(@merchant1.id)
+      save_and_open_page
       
       within "#discounts-#{@discount1.id}" do
         expect(page).to have_content("This Discount Gives #{@discount1.percent_off}% off if the customer buys #{@discount1.threshold} items")

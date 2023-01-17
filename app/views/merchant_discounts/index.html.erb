@@ -1,3 +1,7 @@
+<center><h3>Upcoming Holidays:</center>
+<% @holidays.each do |holiday| %>
+  <center><%= "#{holiday.name} is on #{holiday.date}" %></center>
+<% end %>
 <center><h2><%= "#{@merchant.name} Discounts" %></center>
 <%= link_to "Create New Discount", new_merchant_bulk_discount_path(@merchant.id) %>
 <div id="discounts">
@@ -10,9 +14,5 @@
     </h3>
     </div>
     <br>
-    
   <% end %>
-
-
-
 </div>
