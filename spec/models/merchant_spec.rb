@@ -98,7 +98,7 @@ RSpec.describe Merchant, type: :model do
     @transaction_15 = create(:transaction, invoice: @invoice_13, result: "success", updated_at: Time.now - 11.day)
     @transaction_16 = create(:transaction, invoice: @invoice_14, result: "success", updated_at: Time.now - 11.day)
   end
-
+ 
   describe 'merchant invoices' do
     it 'returns merchant invoice ids' do
       expect(@merchant_2.all_invoice_ids).to eq([@invoice_2.id, @invoice_3.id, @invoice_4.id, @invoice_5.id, @invoice_6.id, @invoice_8.id, @invoice_9.id, @invoice_10.id, @invoice_12.id])
@@ -173,7 +173,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   describe '#top_five merchants based on total revenue' do
-    it 'returns the top five merchants based on total revenue' do
+    before(:each) do
       BulkDiscount.delete_all
       Transaction.delete_all
       InvoiceItem.delete_all
@@ -253,7 +253,9 @@ RSpec.describe Merchant, type: :model do
       transaction_8 = create(:transaction, result: 0, invoice: invoice_8)
       transaction_9 = create(:transaction, result: 1, invoice: invoice_9)
       transaction_10 = create(:transaction, result: 0, invoice: invoice_10)
-      
+    end
+
+    it 'returns the top five merchants based on total revenue' do
       expected = [merchant_1, merchant_2, merchant_4, merchant_5, merchant_7]
       expect(Merchant.top_five).to eq(expected)
     end
@@ -397,6 +399,44 @@ RSpec.describe Merchant, type: :model do
         expect(merchant_1.best_day).to eq(invoice_4)
         expect(merchant_1.best_day.format_date_long).to eq(invoice_4.format_date_long)
       end
+    end
+  end
+
+  describe 'top 5 revenue items' do
+    before(:each) do
+      BulkDiscount.delete_all
+      Transaction.delete_all
+      InvoiceItem.delete_all
+      Invoice.delete_all
+      Item.delete_all
+      Customer.delete_all
+      Merchant.delete_all
+
+      @merchant_1 = create(:merchant, name: "Ye Olde Test Merchant")
+
+      @customer_1 = create(:customer)
+      @invoice_1 = create(:invoice, customer: @customer_1)
+      @item_1 = create(:item, merchant: @merchant_1)
+      @item_2 = create(:item, merchant: @merchant_1)
+      @item_3 = create(:item, merchant: @merchant_1)
+      @item_4 = create(:item, merchant: @merchant_1)
+      @item_5 = create(:item, merchant: @merchant_1)
+      @item_6 = create(:item, merchant: @merchant_1)
+      @item_7 = create(:item, merchant: @merchant_1)
+      @invoice_item_1 = create(:invoice_item, unit_price: 1000, quantity: 20, item: @item_6, invoice: @invoice_1)
+      @invoice_item_2 = create(:invoice_item, unit_price: 900, quantity: 19, item: @item_6, invoice: @invoice_1)
+      @invoice_item_3 = create(:invoice_item, unit_price: 800, quantity: 18, item: @item_5, invoice: @invoice_1)
+      @invoice_item_4 = create(:invoice_item, unit_price: 700, quantity: 17, item: @item_4, invoice: @invoice_1)
+      @invoice_item_5 = create(:invoice_item, unit_price: 600, quantity: 100, item: @item_4, invoice: @invoice_1)
+      @invoice_item_6 = create(:invoice_item, unit_price: 500, quantity: 41, item: @item_3, invoice: @invoice_1)
+      @invoice_item_7 = create(:invoice_item, unit_price: 400, quantity: 32, item: @item_3, invoice: @invoice_1)
+      @invoice_item_8 = create(:invoice_item, unit_price: 300, quantity: 87, item: @item_2, invoice: @invoice_1)
+      @invoice_item_9 = create(:invoice_item, unit_price: 200, quantity: 4, item: @item_1, invoice: @invoice_1)
+      @transaction_1 = create(:transaction, result: 0, invoice: @invoice_1)
+    end
+
+    it 'has a method to find the top 5 items by revenue' do
+      expect(@merchant_1.top_5_revenue_items).to eq([@item_4, @item_6, @item_3, @item_2, @item_5])
     end
   end
 end
