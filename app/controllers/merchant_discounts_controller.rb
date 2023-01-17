@@ -1,7 +1,9 @@
+require '././lib/poros/holiday_service.rb'
 class MerchantDiscountsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @discounts = @merchant.bulk_discounts
+    @holidays = HolidayService.create_holidays
   end
 
   def show
