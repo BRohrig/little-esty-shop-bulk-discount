@@ -10,10 +10,6 @@ class Merchant < ApplicationRecord
 
   enum status: { enabled: 0, disabled: 1 }
 
-  def all_invoice_ids
-    self.invoice_items.distinct.pluck(:invoice_id) #uniq is a ruby method
-  end
-
   def top_customers
             Customer.select("customers.*, COUNT (transactions.id) AS trans_count")
             .distinct

@@ -4,13 +4,21 @@ RSpec.describe 'merchant invoice show' do
   
   describe '/merchants/merchant_id/invoices/invoice_id' do
     before(:each) do
+      BulkDiscount.delete_all
+      Transaction.delete_all
+      InvoiceItem.delete_all
+      Invoice.delete_all
+      Item.delete_all
+      Customer.delete_all
+      Merchant.delete_all
+
       @merchant_1 = create(:merchant)
       @merchant_2 = create(:merchant)
       @merchant_3 = create(:merchant)
 
       @item_1 = create(:item, merchant: @merchant_1)
       @item_2 = create(:item, merchant: @merchant_2)
-      @item_3 = create(:item, merchant: @merchant_2)
+      @item_3 = create(:item, merchant: @merchant_2, name: "Fuzzy Test Item")
       @item_4 = create(:item, merchant: @merchant_2)
       @item_5 = create(:item, merchant: @merchant_2)
       @item_6 = create(:item, merchant: @merchant_2)

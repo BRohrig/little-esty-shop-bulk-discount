@@ -226,7 +226,15 @@ RSpec.describe 'merchant items index page' do
     within "#item_id-#{@item24.id}" do
       expect(page).to have_content("Status: Disabled")
       expect(page).to_not have_content("Enabled")
+      click_button("Disable/Enable")
     end
+
+    expect(current_path).to eq(merchant_items_path(@merchant3.id))
+    within "#item_id-#{@item24.id}" do
+      expect(page).to have_content("Status: Enabled")
+      expect(page).to_not have_content("Disabled")
+    end
+
   end
 
   it 'displays the enabled and disabled items in two separate columns' do
