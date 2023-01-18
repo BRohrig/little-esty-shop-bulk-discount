@@ -16,7 +16,7 @@ RSpec.describe 'merchant invoice show' do
       @merchant_2 = create(:merchant)
       @merchant_3 = create(:merchant)
 
-      @item_1 = create(:item, merchant: @merchant_1)
+      @item_1 = create(:item, merchant: @merchant_1, name: "Purple Test Item")
       @item_2 = create(:item, merchant: @merchant_2)
       @item_3 = create(:item, merchant: @merchant_2, name: "Fuzzy Test Item")
       @item_4 = create(:item, merchant: @merchant_2)
@@ -101,9 +101,11 @@ RSpec.describe 'merchant invoice show' do
       Customer.delete_all
       Merchant.delete_all
       @merchant = create(:merchant)
+      @merchant2 = create(:merchant)
       @item1 = create(:item, merchant: @merchant)
       @item2 = create(:item, merchant: @merchant)
       @item3 = create(:item, merchant: @merchant)
+      @item4 = create(:item, merchant: @merchant2)
       @customer = create(:customer)
       @invoice = create(:invoice, customer: @customer)
       @invoice_item1 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 5, unit_price: 5000)
@@ -112,10 +114,12 @@ RSpec.describe 'merchant invoice show' do
       @invoice_item4 = create(:invoice_item, item: @item2, invoice: @invoice, quantity: 25, unit_price: 10000)
       @invoice_item5 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 20, unit_price: 6000)
       @invoice_item6 = create(:invoice_item, item: @item3, invoice: @invoice, quantity: 35, unit_price: 15000)
+      @invoice_item7 = create(:invoice_item, item: @item4, invoice: @invoice, quantity: 21, unit_price: 42000)
       @bulk_discount1 = create(:bulk_discount, merchant: @merchant, percent_off: 10, threshold: 8)
       @bulk_discount2 = create(:bulk_discount, merchant: @merchant, percent_off: 20, threshold: 20)
       @bulk_discount3 = create(:bulk_discount, merchant: @merchant, percent_off: 30, threshold: 30)
       @bulk_discount4 = create(:bulk_discount, merchant: @merchant, percent_off: 15, threshold: 25)
+      @bulk_discount5 = create(:bulk_discount, merchant: @merchant2, percent_off: 8, threshold: 15)
     end
 
     it 'displays the discounted revenue next to the raw revenue' do

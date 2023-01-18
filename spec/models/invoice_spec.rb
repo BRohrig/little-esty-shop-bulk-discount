@@ -240,9 +240,11 @@ RSpec.describe Invoice, type: :model do
       Customer.delete_all
       Merchant.delete_all
       @merchant = create(:merchant)
+      @merchant2 = create(:merchant)
       @item1 = create(:item, merchant: @merchant)
       @item2 = create(:item, merchant: @merchant)
       @item3 = create(:item, merchant: @merchant)
+      @item4 = create(:merchant)
       @customer = create(:customer)
       @invoice = create(:invoice, customer: @customer)
       @invoice_item1 = create(:invoice_item, item: @item1, invoice: @invoice, quantity: 5, unit_price: 4000)
@@ -257,24 +259,29 @@ RSpec.describe Invoice, type: :model do
       @bulk_discount4 = create(:bulk_discount, merchant: @merchant, percent_off: 15, threshold: 25)
     end
 
-    it 'has a method to find which items received a discount' do
-      expect(Invoice.first.discounted_items).to match([@invoice_item2, @invoice_item4, @invoice_item5, @invoice_item6])
+    it 'has a method to find which merchant items received a discount' do
+      expect(Invoice.first.discounted_items(@merchant.id)).to match([@invoice_item2, @invoice_item4, @invoice_item5, @invoice_item6])
     end
 
-    it 'has a method to find which items did not receive a discount' do
-      expect(Invoice.first.non_discounted_items).to match([@invoice_item1, @invoice_item3])
+    it 'has a method to find which merchant items did not receive a discount' do
+      expect(Invoice.first.non_discounted_items(@merchant.id)).to match([@invoice_item1, @invoice_item3])
     end
 
-    it 'has a method to find the revenue gained by discounted items' do
-      expect(Invoice.first.disc_item_revenue).to eq(28690.0)
+    it 'has a method to find the merchant revenue gained by discounted items' do
+      expect(Invoice.first.disc_item_revenue(@merchant.id)).to eq(28690.0)
     end
 
-    it 'has a method to find the revenue gained by non-discounted items' do
-      expect(Invoice.first.non_disc_item_revenue).to eq(300.0)
+    it 'has a method to find the merchant revenue gained by non-discounted items' do
+      expect(Invoice.first.non_disc_item_revenue(@merchant.id)).to eq(300.0)
     end
 
-    it 'has a method to find the total revenue on this invoice with discounts applied' do
-      expect(Invoice.first.total_disc_revenue).to eq(28990.0)
+    it 'has a method to find the merchant total revenue on this invoice with discounts applied' do
+      expect(Invoice.first.total_disc_revenue(@merchant.id)).to eq(28990.0)
+    end
+
+    xit 'has a method to find the total invoice revenue with discounts' do
+
+
     end
 
 
